@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project_bebas_deh/controllers/payment_controller.dart';
 import '../models/kopi.model.dart';
 import '../controllers/kopi.controller.dart';
 
 class MenuCard extends StatelessWidget {
   final Kopi kopi;
 
-  const MenuCard({super.key, required this.kopi});
+  MenuCard({super.key, required this.kopi});
+  
+  final KopiController kopiController = Get.find();
+  final PaymentController paymentController = Get.put(PaymentController());
+  final KopiController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    final KopiController controller = Get.find();
-
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -27,12 +30,18 @@ class MenuCard extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          kopi.deskripsi,
+          kopi.harga.toString(),
           style: const TextStyle(color: Colors.brown),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            IconButton(
+              icon: const Icon(Icons.shopping_cart, color: Colors.green),
+              onPressed: () {
+                paymentController.buatPesanan(kopi.harga, kopi.nama);
+              },
+            ),
             // UPDATE
             IconButton(
               icon: const Icon(Icons.edit, color: Colors.blue),
