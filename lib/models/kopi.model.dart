@@ -1,16 +1,16 @@
 class Kopi {
   String id;
   String nama;
-  String deskripsi;
+  int harga;
 
-  Kopi({required this.id, required this.nama, required this.deskripsi});
+  Kopi({required this.id, required this.nama, required this.harga});
 
   Map<String, dynamic> toJson() => {
     'id': id,
     'nama': nama,
-    'deskripsi': deskripsi,
+    'harga': harga,
   };
 
   factory Kopi.fromJson(Map<String, dynamic> json, String id) =>
-      Kopi(id: id, nama: json['nama'], deskripsi: json['deskripsi']);
+      Kopi(id: id, nama: json['nama'], harga: json['harga'] ?? 0);
 }
