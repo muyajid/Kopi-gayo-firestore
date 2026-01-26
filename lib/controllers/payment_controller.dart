@@ -1,11 +1,15 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:convert';
 import '../pages/payment_webview.dart'; 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class PaymentController extends GetxController {
   final String serverKey = dotenv.env['MIDTRANS_SERVER_KEY'] ?? '';
+
+  late WebViewController webViewController;
+  var isLoading = true.obs;
   
   Future<void> buatPesanan(int harga, String namaKopi) async {
     try {
@@ -34,8 +38,17 @@ class PaymentController extends GetxController {
       );
 
       if (response.statusCode == 201) {
-        String redirectUrl = jsonDecode(response.body)['redirect_url'];
-        Get.to(() => PaymentWebView(url: redirectUrl));
+        String redirectUrl = jsonDecode(response.body)['redirect_url'];webViewController = WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..setNavigationDelegate(
+            NavigationDelegate(
+              onPageStarted: (_) => isLoading.value = true,
+              onPageFinished: (_) => isLoading.value = false,
+            ),
+          )
+          ..loadRequest(Uri.parse(redirectUrl));
+
+        Get.to(() => PaymentWebview());
       } else {
         Get.snackbar("Gagal", "Error Midtrans: ${response.body}");
       }
