@@ -1,34 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/instance_manager.dart';
+import 'package:get/route_manager.dart';
+import 'package:project_bebas_deh/controllers/payment_controller.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class PaymentWebView extends StatefulWidget {
-  final String url;
-  const PaymentWebView({super.key, required this.url});
+class PaymentWebview extends StatelessWidget {
+  PaymentWebview({super.key});
+  final PaymentController controller = Get.find<PaymentController>();
 
-  @override
-  State<PaymentWebView> createState() => _PaymentWebViewState();
-}
-
-class _PaymentWebViewState extends State<PaymentWebView> {
-  late final WebViewController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
-      ..loadRequest(Uri.parse(widget.url));
-  }
-
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Pembayaran Kopi Gayo"),
-        backgroundColor: Colors.brown, 
+        backgroundColor: Colors.brown,
       ),
-      body: WebViewWidget(controller: controller),
+      body: Stack(
+        children: [
+          WebViewWidget(controller: controller.webViewController),
+          Obx(() => controller.isLoading.value 
+            ? const Center(child: CircularProgressIndicator(color: Colors.brown)) 
+            : const SizedBox.shrink()),
+        ],
+      ),
     );
   }
 }

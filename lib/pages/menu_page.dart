@@ -30,7 +30,6 @@ class MenuPage extends StatelessWidget {
         if (controller.kopis.isEmpty) {
           return const Center(child: Text("Data kopi kosong"));
         }
-
         if (orientation == Orientation.portrait) {
           return ListView.builder(
             padding: const EdgeInsets.all(12),
@@ -38,7 +37,6 @@ class MenuPage extends StatelessWidget {
             itemBuilder: (_, i) => MenuCard(kopi: controller.kopis[i]),
           );
         }
-
         return GridView.builder(
           padding: const EdgeInsets.all(12),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
